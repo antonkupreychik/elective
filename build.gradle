@@ -1,0 +1,74 @@
+plugins {
+    id 'java'
+    id  'jacoco'
+    id 'war'
+}
+
+group = 'com.javarush'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    //db
+    implementation 'org.hibernate.orm:hibernate-core:6.5.0.Final'
+    implementation 'org.postgresql:postgresql:42.7.3'
+    implementation 'org.liquibase:liquibase-core:4.27.0'
+
+    //logging
+    implementation 'org.slf4j:slf4j-api:2.0.13'
+    implementation 'ch.qos.logback:logback-classic:1.5.6'
+
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+    implementation 'org.projectlombok:lombok:1.18.30'
+
+
+    implementation 'org.thymeleaf:thymeleaf-spring6:3.1.2.RELEASE'
+
+    //jackson
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.18.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.0'
+
+    //spring web
+    implementation 'org.springframework:spring-webmvc:6.1.6'
+    implementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+    implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.0'
+    implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1'
+
+    //spring data
+    implementation 'org.springframework.data:spring-data-jpa:3.2.5'
+
+    //annotations
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+
+
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport // report is always generated after tests run
+}
+jacoco {
+    toolVersion = "0.8.9"
+    reportsDirectory = layout.buildDirectory.dir('customJacocoReportDir')
+}
+
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+    reports {
+        xml.required = false
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    }
+}
+
+war {
+    archiveBaseName = 'app'
+    version = ''
+}
